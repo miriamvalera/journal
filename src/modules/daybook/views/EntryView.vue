@@ -26,7 +26,9 @@
         ></textarea>
     </div>
 
-    <Fab />
+    <Fab 
+        icon="fa-save"
+    />
     <img 
         src="https://i0.wp.com/www.lenda.net/wp-content/uploads/2018/09/travel-landscape-01.jpg?ssl=1" 
         alt="entry-picture"
