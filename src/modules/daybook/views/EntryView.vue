@@ -1,9 +1,9 @@
 <template>
     <div class="entry-title d-flex justify-content-between p-2">
         <div>
-            <span class="text-success fs-3 fw-bold">20</span>
-            <span class="mx-1 fs-3">Octubre</span>
-            <span class="mx-2 fs-4 fw-light">2021, miércoles</span>
+            <span class="text-success fs-3 fw-bold">{{ day }}</span>
+            <span class="mx-1 fs-3">{{ month }}</span>
+            <span class="mx-2 fs-4 fw-light">{{ yearDay }}</span>
         </div>
 
         <div>
@@ -21,7 +21,8 @@
 
     <hr>
     <div class="d-flex flex-column px-3 h-75">
-        <textarea 
+        <textarea
+            v-model="entry.text" 
             placeholder="¿Qué sucedió hoy?"
         ></textarea>
     </div>
@@ -40,6 +41,8 @@
 import { defineAsyncComponent } from 'vue'
 import { mapGetters } from 'vuex'
 
+import getDayMonthYear from '../helpers/getDayMonthYear';
+
 export default {
     props: {
         id:{
@@ -50,13 +53,32 @@ export default {
     components: {
         Fab: defineAsyncComponent(() => import('../components/Fab.vue'))
     },
-    computed: {
-        ...mapGetters('journal', ['getEntryById'])
+    data() {  //esta es una entrada de mi estado
+        return {
+            entry: null
+        }
     },
-    methods: {
+    computed: {
+        ...mapGetters('journal', ['getEntryById']),
+        day() {
+            const { day } = getDayMonthYear( this.entry.date )
+            return day
+        },
+        month() {
+            const { month } = getDayMonthYear( this.entry.date )
+            return month
+        },
+        yearDay() {
+            const { yearDay } = getDayMonthYear( this.entry.date )
+            return yearDay
+        }
+    },
+    methods: {  // esta es una entrada que estoy leyendo del getEntryById que lo localizamos en el getters
         loadEntry() {
             const entry = this.getEntryById( this.id )
-            console.log( entry )
+            if( !entry ) this.$router.push( {name: 'no-entry' })
+
+            this.entry = entry 
         }
     },
     created() {
